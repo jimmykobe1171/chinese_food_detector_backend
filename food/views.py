@@ -2,19 +2,32 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-from django.http import JsonResponse, HttpResponseNotAllowed
+from django.http import JsonResponse, HttpResponseNotAllowed, HttpResponseBadRequest, HttpResponseServerError
+from django.views.decorators.csrf import csrf_exempt
 from .models import Food
 
 # Create your views here.
 
+@csrf_exempt
 def upload_food_image_view(request):
-    data = [
-        {'foo':'bar'},
-        {'foo':'bar'},
-        {'foo':'bar'}
-    ]
     if request.method == 'POST':
-        return JsonResponse(data, safe=False)
+        image = request.FILES.get('file')
+        if image:
+            # create new food
+            try:
+                food = Food(image=image)
+                food.save()
+            except Exception as e:
+                print e
+                return HttpResponseServerError()
+
+            data = {
+                'id': food.id,
+                'image': food.image.url
+            }
+            return JsonResponse(data)
+        else:
+            return HttpResponseBadRequest()
     else:
         return HttpResponseNotAllowed(['POST'])
 
