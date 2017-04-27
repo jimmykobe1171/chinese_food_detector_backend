@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from chinese_food_detector_backend.settings import MEDIA_URL
 
 # Create your models here.
 

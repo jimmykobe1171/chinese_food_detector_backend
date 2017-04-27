@@ -120,5 +120,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL  = '/media/'
+MEDIA_ROOT = BASE_DIR + MEDIA_URL
 
 ALLOWED_HOSTS = '*'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
